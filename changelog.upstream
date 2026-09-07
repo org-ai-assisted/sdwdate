@@ -1,3 +1,279 @@
+commit c9890a046f74b22b890cbae4dc422129a706e755
+Merge: ca99918 be1db0c
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Aug 30 09:55:04 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit ca999189d766b184a7de3c2a90ee2b6289238d29
+Merge: b420a67 e0faf84
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Aug 30 01:15:30 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/org-ai-assisted/ai'
+
+commit be1db0ce32d8cbe30d17301ba41692aa7d33c5de
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Fri Aug 28 01:35:31 2026 -0400
+
+    Polish
+
+commit 5e201dbd548954ad81bf79471bef17ca2af24f1b
+Merge: 6742e54 e0faf84
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Fri Aug 28 01:05:42 2026 -0400
+
+    Merge branch 'ai' into arraybolt3/trixie
+
+commit e0faf84eb56a5357ca9daf97180403d503c3414b
+Author: claude (dev319 9f99de02-2c2e-4212-bd6c-350f4c8b2340) <noreply@anthropic.com>
+Date:   Tue Aug 25 01:16:10 2026 -0400
+
+    sdwdate: disable 2 dead time-source onions
+
+    Startpage (POOL_ZERO) and Whistleblower Aid SecureDrop (POOL_TWO) are
+    unreachable -- verified 2026-08-25 via curl and a headless browser over
+    multiple independent Tor circuits, while control onions load fine. Neither
+    rotated: both are still listed at the same address on their own pages, so
+    comment out (conf convention: preserve evidence, easy re-enable) rather than
+    delete. Leaves 57 active sources; probe-removed skips them (hash retained).
+
+commit 96fb5c7f8e4e773a0bd1bd8e3ee6b2df8672b6a4
+Author: claude (dev319 9f99de02-2c2e-4212-bd6c-350f4c8b2340) <noreply@anthropic.com>
+Date:   Tue Aug 25 00:37:39 2026 -0400
+
+    onion-tester: doc dist-ai split + guard probe curl URL
+
+    - Note in local-onion-tester.yml that the wrapper scripts live in dist-ai
+      (tested by dist-ai's own self-test lane); paths: cannot watch another repo.
+    - exec_curl: pass -- before the URL so a leading-dash conf entry cannot be
+      parsed by curl as an option (same class fixed in dist-ai onion-tester-warmup).
+
+commit b005d4619e4afe31d9873f213130859dd31315d7
+Author: claude (dev320 3da4f74c-4233-4462-b801-e375b347f43d) <noreply@anthropic.com>
+Date:   Tue Aug 25 00:00:29 2026 -0400
+
+    write_preparation_output: catch Exception, not OSError
+
+    - OSError was too narrow: the write references the main()-time global
+      preparation_output_path, so under a dist-ai testlib that does not stub it
+      (master, pre-#107) the best-effort write raised NameError and reddened
+      sdwdate's consumer CI. Exception keeps the daemon alive on any write
+      problem while still letting SystemExit / KeyboardInterrupt propagate.
+
+commit d33ee211ea0e4b9abed95fe4a5ea2c3cba649030
+Author: claude (dev320 3da4f74c-4233-4462-b801-e375b347f43d) <noreply@anthropic.com>
+Date:   Mon Aug 24 23:52:54 2026 -0400
+
+    write_preparation_output: catch OSError, not BaseException
+
+    - CodeQL: broad BaseException swallows SystemExit/KeyboardInterrupt; the
+      only failure mode of a best-effort file write is OSError.
+
+commit 82da33d143f3bb3c1d0ba39734b4decc26f2b777
+Merge: 88cd08a 0e3d27e
+Author: claude (dev320 3da4f74c-4233-4462-b801-e375b347f43d) <noreply@anthropic.com>
+Date:   Mon Aug 24 23:32:35 2026 -0400
+
+    Merge remote-tracking branch 'org-ai-assisted/ai' into ai
+
+commit 0e3d27e38a9d46ad3c03c17d95dc8f541efe943c
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Mon Aug 24 23:31:14 2026 -0400
+
+    ci: drop orphaned consumer-secrets-audit.yml (reusable decommissioned)
+
+commit 8e0bfe43da775c23849d6041ce4ec07267afbcb8
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Mon Aug 24 23:31:12 2026 -0400
+
+    ci: drop orphaned consumer-pre-push-static.yml (reusable decommissioned)
+
+commit 88cd08ad30c59b84362abeb58eef6078ac745d17
+Author: claude (dev320 3da4f74c-4233-4462-b801-e375b347f43d) <noreply@anthropic.com>
+Date:   Mon Aug 24 23:29:55 2026 -0400
+
+    expose preparation output for systemcheck
+
+    - systemcheck showed onion-time-pre-script's report by re-running it: a
+      second copy of the Tor bootstrap chain, always SIGKILLed at 5s.
+    - Running it there would also fire its anondate-set / newnym side
+      effects; a diagnostic must not. Persist the real output each loop so
+      systemcheck can read it instead.
+
+commit b420a67339bf5ba2ac39ec387b3b46d3c769d67d
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Tue Aug 25 03:28:37 2026 +0000
+
+    bumped changelog version
+
+commit 1c4f00f92d30f16c9f7c136975b3603fd9f5f894
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Aug 24 02:36:01 2026 -0400
+
+    fix
+
+commit 9834bc58f4fbedc1b5f3d8d83a6cab1924f3da31
+Merge: a7e34a4 ababc04
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Aug 24 02:34:05 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/org-ai-assisted/ai'
+
+commit a7e34a40cdcec6fec97dd1f11afed58c0c3809d6
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Aug 16 08:23:40 2026 +0000
+
+    bumped changelog version
+
+commit ababc0479ca3748efe0cff5121aed2869d44bd11
+Author: claude (dev182 e09ec5cf-4ebf-4e1b-88e5-55fbac6ef1d3) <noreply@anthropic.com>
+Date:   Mon Aug 10 13:56:59 2026 -0400
+
+    onion-test-confirm: let grep drain scurl output
+
+    grep -q exits on the first match and closes the pipe, sending SIGPIPE to
+    scurl. Under pipefail the pipeline then reports failure, so a URL that DID
+    match is wrongly reported as Failed. Drop -q and redirect to /dev/null so
+    grep reads the whole stream; add -F so plain_url is matched as a fixed
+    string rather than a regex.
+
+    Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
+
+commit f32463adffef588ac0450b089b153be71ad0ba6f
+Author: claude (dev178 ef0a4b88-92fa-4271-9479-a3273c15f53e) <noreply@anthropic.com>
+Date:   Mon Aug 10 12:51:02 2026 -0400
+
+    sdwdate: drop the SC1091 disable on the helper-scripts source
+
+    The pre-push static gate now provisions helper-scripts as a repo sibling when a
+    consumer sets dm-consumer helper-scripts: true (which sdwdate does), so
+    'shellcheck -x' follows has.sh instead of emitting SC1091. Keep the source=
+    directive; drop the inline disable.
+
+commit 8ce6a68715fa4655d1f5cb88869376ed8abbd74e
+Author: claude (dev178 ef0a4b88-92fa-4271-9479-a3273c15f53e) <noreply@anthropic.com>
+Date:   Mon Aug 10 10:16:09 2026 -0400
+
+    sdwdate: printf output, drop vestigial output_cmd, end-of-options separators
+
+    - suspend-post: gate the stdout copy on a boolean + printf '%s\n' instead of
+      the "echo"/"true" command-string dispatch (R-034: no echo). Behaviour is
+      unchanged (messages are date-prefixed, so echo never saw a leading flag).
+    - suspend-pre: drop the vestigial output_cmd_set -- output_cmd_func already
+      prints directly, so the toggle never took effect; removes the set-but-unused
+      var and its SC2034 waiver.
+    - add '--' end-of-options to cd, dirname, mkfifo, mkdir, chown, touch on the
+      variable and path operands (R-062).
+
+    Regression test lands in dist-ai (sdwdate-tests/test_suspend_output.py): drives
+    the real output helpers and is canaried against inverted logic and a
+    reintroduced echo dispatch.
+
+commit 85924b715e85f6749719ce54b118f9ef9a81674f
+Merge: 3a05582 6742e54
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Aug 10 09:40:40 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit 6742e545e62ae2d02fc1a4dd5cc30dcdaba7a991
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Sun Aug 9 00:31:58 2026 -0400
+
+    Tweaks, TODOs, revert double-quote-to-single-quote conversion as our coding style adheres to Black which uses double quotes by default in Python
+
+commit 0b64c55e5f6820f45ff7e2987a0fa5e00b7ed912
+Merge: 9ff7857 a415b98
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Sat Aug 8 22:58:57 2026 -0400
+
+    Merge branch 'ai' into arraybolt3/trixie
+
+commit a415b981782f76f9ea872914b2da2a8d62f597bc
+Author: claude (dev163 38f9745c-aed1-4fb4-b6ae-9899f20f8de2) <noreply@anthropic.com>
+Date:   Fri Aug 7 07:17:12 2026 -0400
+
+    fix shellcheck directives for an isolated CI checkout
+
+    The gate passed locally but failed (or would fail) in CI. Cause: CI checks
+    each repo out ALONE, while locally they sit side by side as submodules
+    under derivative-maker/packages. A '# shellcheck source=' climbing out of
+    the repo ('../../../../helper-scripts/...') therefore resolves here and
+    not there, so shellcheck reports SC1091 and the gate fails on a commit
+    that looked clean.
+
+    The source= paths are kept -- they document where the file actually lives
+    -- and each is paired with a 'disable=SC1091' so an absent sibling is
+    tolerated. Same shape already used in security-misc master.
+
+    Follow-on findings from the same isolated run, each with a stated reason
+    rather than a blanket waiver:
+    - SC2154 on systemd_notify: assigned by the sourced systemd-notify.bsh,
+      which shellcheck can no longer follow.
+    - SC2034 on SCRIPTNAME and output_cmd: genuinely unused. suspend-pre's
+      output_cmd toggle is vestigial -- unlike suspend-post the script prints
+      directly -- flagged rather than removed, since wiring it up or dropping
+      it is a maintainer call.
+    - SC1090 on the uwt.d conf glob: a dynamic source, which R-081 prescribes
+      SC1090 for.
+
+    Verified with a new reproducer, ~/strict-pass-tests/ci-repro.sh, which
+    clones the repo on its own and runs the real gate there -- the condition
+    CI actually sees. All six repos: gate exit 0.
+
+    Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+commit 62803868b030504cd0880373946bde829832aacb
+Author: claude (dev163 38f9745c-aed1-4fb4-b6ae-9899f20f8de2) <noreply@anthropic.com>
+Date:   Wed Aug 5 15:57:16 2026 -0400
+
+    sdwdate: R-010 strict for the 14 standalone scripts
+
+    Two regressions strict mode would have introduced, both caught by running
+    the scripts rather than by reading them:
+
+    - config-test runs three config checks and its documented usage redirects
+      stdout to a report file. Under errexit the first failing check aborted
+      and the other two were never reported -- observed as one error line
+      instead of three. The first two are now explicitly non-fatal; the third
+      is left fatal so the script still exits with the last check's status,
+      exactly as before (verified: exit 2 either way).
+
+    - onion-test-confirm printed its diagnostic with
+      'echo scurl --tlsv1.2 --silent --location "${url}"'. Converting that to
+      printf with the same argument list made printf REPEAT its format, one
+      word per line, instead of the single line echo produced. The message is
+      now a single quoted argument. This one was mine, introduced by the
+      echo -> printf sweep; the rest of the tree was audited for the same
+      shape and usability-misc's multi-argument printf was confirmed
+      byte-identical to the three echos it replaced.
+
+    The Qubes suspend hooks under etc/qubes/suspend-{pre,post}.d are safe to
+    convert: that directory's own README states executable '.sh' files there
+    are EXECUTED as root, not sourced.
+
+    Also: 25 rm -> safe-rm (R-120), echo -> printf (R-034), 'has' instead of
+    'command -v' (R-090), SC2124 '$@' -> '$*' in message strings, SC2209
+    quoting on the output_cmd dispatch variable, SC2162 'read -r', SC2250
+    braces.
+
+    Noted, not changed: suspend-pre's output_cmd_set() toggle is vestigial --
+    it assigns output_cmd but the script prints directly, so unlike
+    suspend-post the verbose setting has no effect there.
+
+    Sandbox differential vs the pre-change scripts, comparing output AND exit
+    code, with the daemon stubbed out so the comparison is deterministic:
+    15 cases, all identical.
+
+    Co-Authored-By: Claude Opus 5 (1M context) <noreply@anthropic.com>
+
+commit 3a055826c3edf6ada8eed77acc4d4403a72035f6
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Aug 1 08:11:27 2026 +0000
+
+    bumped changelog version
+
 commit aeec06debd7f0c230d7635d1fb4e05cf7e69162d
 Merge: 945afee eb83a6a
 Author: Patrick Schleizer <adrelanos@whonix.org>
