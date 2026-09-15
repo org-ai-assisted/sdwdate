@@ -1,3 +1,74 @@
+commit 212c9a639bb02099403dc2602d1c3cbc9c82b987
+Merge: 9fde622 f24e0e5
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Mon Sep 14 02:25:45 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit f24e0e5c996796683800f21a202e78c2a535fcc6
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Sun Sep 13 18:29:44 2026 -0400
+
+    Move privleap configuration to non-conffile location
+
+commit 9fde622430daa75dd38c3fc42e47c4193677b49a
+Merge: bdcf160 36e1194
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sat Sep 12 09:45:26 2026 -0400
+
+    Merge remote-tracking branch 'refs/remotes/ArrayBolt3/arraybolt3/trixie'
+
+commit 36e119413e83219410f9ed94134d72ccbcd7234b
+Merge: bdcf160 322fa68
+Author: Aaron Rainbolt <arraybolt3@gmail.com>
+Date:   Fri Sep 11 19:29:23 2026 -0400
+
+    Merge branch 'ai' into arraybolt3/trixie
+
+commit 322fa6869c6d45e7d19e7ed9d104e15f897f1be9
+Merge: 16e9465 94f7d36
+Author: claude <noreply@anthropic.com>
+Date:   Tue Sep 8 13:15:21 2026 -0400
+
+    Merge branch 'master' into ai
+
+commit 94f7d365655d3b85361f470688b4493856e89570
+Merge: 3d21301 16e9465
+Author: assisted-by-ai (Bot Account) (Machine Account) <228987186+assisted-by-ai@users.noreply.github.com>
+Date:   Mon Sep 7 22:13:22 2026 -0400
+
+    Merge pull request #11 from org-ai-assisted/ai
+
+    rename has.sh -> has.bsh (bashism convention)
+
+commit 16e946532a41d630b483affc58504a80fbfa1e9d
+Author: claude (dev474 c7439536-fad8-4884-b71a-d2f3c4c23905) <noreply@anthropic.com>
+Date:   Mon Sep 7 11:08:14 2026 -0400
+
+    rename has.sh to has.bsh (bashism convention)
+
+    Sourced helper-scripts lib uses bashisms; .bsh marks it. Path-only edit.
+
+commit 3d213016c19ecb603c1d2f5b8c0bb3a717a19963
+Merge: 6f61d0e bdcf160
+Author: claude (dev474 c7439536-fad8-4884-b71a-d2f3c4c23905) <noreply@anthropic.com>
+Date:   Mon Sep 7 11:08:14 2026 -0400
+
+    Merge remote-tracking branch 'github-kicksecure/master'
+
+commit 79471cb79d02a8bd9589f39a33a2baf31345d936
+Merge: e0faf84 3d21301
+Author: claude (dev474 c7439536-fad8-4884-b71a-d2f3c4c23905) <noreply@anthropic.com>
+Date:   Mon Sep 7 11:08:14 2026 -0400
+
+    Merge branch 'master' into ai
+
+commit bdcf160260bf88d182180170187543aafc21718a
+Author: Patrick Schleizer <adrelanos@whonix.org>
+Date:   Sun Sep 6 16:48:00 2026 +0000
+
+    bumped changelog version
+
 commit c9890a046f74b22b890cbae4dc422129a706e755
 Merge: ca99918 be1db0c
 Author: Patrick Schleizer <adrelanos@whonix.org>
@@ -822,6 +893,13 @@ Date:   Mon Jul 13 11:51:10 2026 -0400
     per R-070. No behavior change.
 
     Co-authored-by: claude (dev71 31548627-e7c1-43cd-bd41-8b0900c72576) <noreply@anthropic.com>
+
+commit 6f61d0edfdc684cb26a48691be27ad320bc63209
+Merge: a7e2ac5 9ff7857
+Author: claude (dev51 c174cb1f-7906-40e7-be69-3900163e1e27) <noreply@anthropic.com>
+Date:   Sat Jul 4 12:11:11 2026 +0000
+
+    Merge commit '9ff78573d9d6c55636745bb07fa8d02a70ab9800'
 
 commit 9ff78573d9d6c55636745bb07fa8d02a70ab9800
 Author: Patrick Schleizer <adrelanos@whonix.org>
