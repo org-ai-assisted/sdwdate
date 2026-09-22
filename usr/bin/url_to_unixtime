@@ -37,7 +37,14 @@ time.tzset()
 
 
 def data_to_http_time(data):
-    http_time = data.headers["Date"]
+    ## A hostile server may omit the Date header entirely; reject that cleanly
+    ## rather than crash with an uncaught KeyError.
+    try:
+        http_time = data.headers["Date"]
+    except KeyError:
+        print('HTTP header has no Date field.', file=sys.stderr)
+        print('HTTP header data:\n{}'.format(data), file=sys.stderr)
+        sys.exit(2)
 
     ## Test ###################
     #http_time = http_time[:28]
@@ -127,7 +134,13 @@ def http_time_to_parsed_unixtime(data, http_time):
         ## Thanks to:
         ## eumiro
         ## http://stackoverflow.com/a/3894047/2605155
-        parsed_unixtime = parse(http_time).strftime('%s')
+        ## timestamp() honors the header's own UTC offset. strftime('%s')
+        ## formats the naive wall-clock fields in TZ=UTC and DISCARDS the
+        ## offset, so a hostile server sending a non-GMT offset (e.g. +0500)
+        ## could shift the result by up to ~24h while still passing every
+        ## downstream sanity check. int() drops sub-second precision; str() for
+        ## the length/int checks in unixtime_sanity_check.
+        parsed_unixtime = str(int(parse(http_time).timestamp()))
 
     ## A hostile server controls this Date header. dateutil raises ValueError
     ## on an unparseable date, but OverflowError on an out-of-C-int-range year
@@ -155,7 +168,8 @@ def parse_command_line_parameters():
         url = sys.argv[3]
         verbosity = sys.argv[4]
 
-    except IndexError as e:
+    ## IndexError: too few args. ValueError: a non-numeric port from int().
+    except (IndexError, ValueError) as e:
         print("Parsing command line parameter failed. | e: {}".format(e), file=sys.stderr)
         print("sys.argv:", str(sys.argv), file=sys.stderr)
         sys.exit(7)

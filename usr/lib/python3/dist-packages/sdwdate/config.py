@@ -72,10 +72,17 @@ def allowed_failures_config():
                 lines = conf.readlines()
             for line in lines:
                 if line.startswith("MAX_FAILURE_RATIO"):
-                    failure_ratio = re.search(r"=(.*)", line).group(1)
-    if failure_ratio is None:
-        failure_ratio = 0.34
-    return failure_ratio
+                    match = re.search(r"=(.*)", line)
+                    if match is not None:
+                        failure_ratio = match.group(1)
+    # Coerce to float, falling back to the default on a missing or malformed
+    # value, rather than crash the daemon at startup on a corrupt conf file: a
+    # truncated "MAX_FAILURE_RATIO" line with no "=" leaves re.search None, and
+    # a non-numeric value would raise later in allowed_failures_calculate.
+    try:
+        return float(failure_ratio)
+    except (TypeError, ValueError):
+        return 0.34
 
 
 def allowed_failures_calculate(
