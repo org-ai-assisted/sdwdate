@@ -17,6 +17,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #  - build-essential: gcc, make, libc6-dev for the sclockadj C helper.
 #  - python3-stem/-dateutil/-socks/-sdnotify/-requests: sdwdate's third-party
 #    Python imports.
+#  - python3-yaml: pulled in transitively via helper-scripts' guimessages.
 #  - bc, tor, util-linux-extra: runtime Depends that may appear in code paths.
 # Kicksecure-only Depends (helper-scripts, msgcollector, privleap) are not in
 # Debian: helper-scripts is cloned below for the two modules sdwdate imports
@@ -32,6 +33,7 @@ RUN apt-get update && apt-get install --yes --no-install-recommends \
         python3-socks \
         python3-sdnotify \
         python3-requests \
+        python3-yaml \
         bc \
         tor \
         util-linux-extra \
