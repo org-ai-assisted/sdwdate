@@ -45,17 +45,23 @@ RUN git clone --depth 1 https://github.com/Kicksecure/helper-scripts.git \
         /opt/helper-scripts
 
 # Resolve both sdwdate's own package and helper-scripts' modules offline.
-ENV PYTHONPATH=/src/sdwdate/usr/lib/python3/dist-packages:/opt/helper-scripts/usr/lib/python3/dist-packages
+ENV PYTHONPATH=/src/usr/lib/python3/dist-packages:/opt/helper-scripts/usr/lib/python3/dist-packages
 
-# Project source (the scanner clones the repo and uses it as the build context).
-COPY . /src/sdwdate
-WORKDIR /src/sdwdate
+# Scanner contract: the checkout lives inside the image at /src (COPY . /src),
+# with its .git attached there -- do not nest it in a subdirectory.
+COPY . /src
+WORKDIR /src
 
-# Build + verify inside the image. sdwdate has no unit-test suite, so the
-# verification is: compile the C helper with its hardened flags, byte-compile
-# every Python module (catches syntax errors), and import the full package so
-# the whole dependency graph (third-party + ecosystem) is proven resolvable
-# offline. Any failure fails the build loudly.
-RUN make -C usr/src/sdwdate \
-    && python3 -m py_compile usr/lib/python3/dist-packages/sdwdate/*.py \
-    && python3 -c "import sdwdate.sdwdate, sdwdate.remote_times, sdwdate.config, sdwdate.timesanitycheck, sdwdate.proxy_settings"
+# Build the C helper as the maintainers build it (the project Makefile compiles
+# sclockadj with debug info plus a hardened flag set). A build step that fails
+# fails the build, per the scanner contract.
+RUN make -C usr/src/sdwdate
+
+# Cheap offline smoke test. sdwdate's real suite (dist-ai tests, ClusterFuzzLite
+# fuzzers, the integration scripts) needs Tor / network, which is gone after the
+# build, so the offline check is: byte-compile every module and import the full
+# package, proving the whole dependency graph (third-party + ecosystem) resolves.
+# Per the scanner contract a failing test must NOT abort the build.
+RUN { python3 -m py_compile usr/lib/python3/dist-packages/sdwdate/*.py \
+      && python3 -c "import sdwdate.sdwdate, sdwdate.remote_times, sdwdate.config, sdwdate.timesanitycheck, sdwdate.proxy_settings" ; } \
+    || echo "WARNING: sdwdate offline smoke test reported failures"
