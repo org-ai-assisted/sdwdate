@@ -9,7 +9,8 @@
 	dh $@
 
 override_dh_install:
-	dh_apparmor --profile-name=usr.bin.sdwdate
+	dh_apparmor --profile-name=usr.libexec.sdwdate.sdwdate
+	dh_apparmor --profile-name=usr.libexec.sdwdate.sclockadj
 	dh_apparmor --profile-name=usr.bin.url_to_unixtime
 	dh_install
 
