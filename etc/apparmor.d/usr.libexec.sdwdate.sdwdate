@@ -43,7 +43,16 @@
   /usr/libexec/helper-scripts/tor_bootstrap_check.py mrix,
   /usr/libexec/helper-scripts/tor_consensus_valid-after.py mrix,
   /usr/libexec/helper-scripts/tor_consensus_valid-until.py mrix,
+  /usr/libexec/sdwdate/ r,
   /usr/libexec/sdwdate/sdwdate r,
+  ## The daemon drives privileged time operations (anondate-set, clock jump,
+  ## hwclock sync) through privleap. Required now that the daemon is actually
+  ## confined: without these, leaprun exec is denied and sdwdate's tor/anondate
+  ## preparation fails (verified end-to-end on a Kicksecure VM). Matches the
+  ## systemcheck profile's privleap-client pattern.
+  /{,usr/}bin/leaprun rix,
+  /run/privleapd/pid r,
+  /run/privleapd/comm r,
   ## sclockadj is the privileged CAP_SYS_TIME clock setter. Stack it into its own
   ## minimal profile (additive, NNP-safe) so a compromised daemon path cannot use
   ## the daemon's broader rules through it.
