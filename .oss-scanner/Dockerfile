@@ -9,7 +9,7 @@
 #
 # sdwdate's remote-attack surface (the reason it is a good scan target): it
 # connects out over Tor to arbitrary onion webservers and parses the HTTP
-# Date header (RFC 2616) from responses it does not control. The parsing paths
+# Date header (RFC 9110) from responses it does not control. The parsing paths
 # live in remote_times.py / timesanitycheck.py / sdwdate.py.
 
 FROM debian:trixie-slim

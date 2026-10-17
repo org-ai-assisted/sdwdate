@@ -11,7 +11,7 @@ sdwdate (Secure Distributed Web Date) is the default network time
 synchronization daemon shipped in every Whonix and Kicksecure installation. It
 is a Tor-friendly replacement for ntpdate/rdate: at randomized intervals it
 connects over Tor (SOCKS) to a configured pool of remote webservers, reads the
-`Date` HTTP header (RFC 2616) from their responses, and gradually adjusts the
+`Date` HTTP header (RFC 9110) from their responses, and gradually adjusts the
 system clock via the `sclockadj` helper.
 
 Correct, attack-resistant time keeping is security-critical here: the clock
