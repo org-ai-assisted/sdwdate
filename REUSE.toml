@@ -10,9 +10,10 @@ version = 1
 # LICENSES-only tree on github.com yet (licensee#926, merged-not-deployed).
 
 [[annotations]]
+# COPYING and LICENSES/ are non-Covered Files (REUSE Spec 3.3) -- reuse ignores them, so
+# they are intentionally NOT listed here. Listing them would wrongly imprint the ESL
+# copyright on the FSF's verbatim AGPL text. Do not re-add.
 path = [
-  "COPYING",
-  "LICENSES/**",
   "debian/**",
   "auto-generated-man-pages/**",
   "changelog.upstream",
