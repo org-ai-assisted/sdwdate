@@ -1,9 +1,12 @@
 version = 1
 
 # Licensing layout: debian/copyright stays DEP-5; COPYING holds the verbatim
-# AGPL text (GitHub's licensee does not detect DEP-5 and reports NOASSERTION,
-# https://github.com/licensee/licensee/issues/333 ), duplicated into
-# LICENSES/AGPL-3.0-or-later.txt as REUSE requires.
+# AGPL text, duplicated into LICENSES/AGPL-3.0-or-later.txt as REUSE requires.
+# Verbatim COPYING is needed because GitHub's licensee does not detect DEP-5
+# (reports NOASSERTION; https://github.com/licensee/licensee/issues/333 ,
+# wontfix) and does not yet detect a LICENSES/-only tree on github.com
+# (https://github.com/licensee/licensee/pull/926 added it, but github.com
+# ships a lagging build).
 #
 # sdwdate is single-license (AGPL-3.0-or-later), single copyright holder.
 # Bulk-annotate every file; in-file "Copyright (C) ..." headers still apply
