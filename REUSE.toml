@@ -1,0 +1,10 @@
+version = 1
+
+# sdwdate is single-license (AGPL-3.0-or-later), single copyright holder.
+# Bulk-annotate every file; in-file "Copyright (C) ..." headers still apply
+# (precedence = aggregate adds this holder, it does not replace them).
+[[annotations]]
+path = "**"
+precedence = "aggregate"
+SPDX-FileCopyrightText = "2012 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
