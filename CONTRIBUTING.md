@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 Conditions for Contributions to Whonix
 
 By contributing to Whonix, you acknowledge that you have read, understood and agreed to our Privacy Policy, Cookie Policy, Terms of Service, and E-Sign Consent.

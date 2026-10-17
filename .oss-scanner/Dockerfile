@@ -1,3 +1,6 @@
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
+
 # OSS Scanner build environment for sdwdate.
 #
 # Contract: this Dockerfile runs with network access. The scan then runs the

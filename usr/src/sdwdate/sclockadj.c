@@ -1,6 +1,6 @@
 /*
-Copyright (C) 2016 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-See the file COPYING for copying conditions.
+SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+SPDX-License-Identifier: AGPL-3.0-or-later
 */
 #define _GNU_SOURCE
 

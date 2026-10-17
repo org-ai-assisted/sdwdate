@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Secure Distributed Network Time Synchronization #
 
 Time keeping is crucial for security, privacy, and anonymity. Sdwdate is a Tor

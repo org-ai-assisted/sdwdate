@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # sdwdate threat model
 
 ## What sdwdate is
