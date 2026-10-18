@@ -1,3 +1,6 @@
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
+
 TARGET=sclockadj
 
 TARGETARCH := $(shell gcc -dumpmachine)
