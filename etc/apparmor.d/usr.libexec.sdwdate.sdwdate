@@ -21,10 +21,15 @@
 
   signal receive set=cont,
   signal receive set=term,
-  ## The reaped child's stacked label is <child>//&<parent>, so the send peer
-  ## must name url_to_unixtime first; the reversed order never matches and the
-  ## SIGTERM to the url_to_unixtime child is denied.
+  ## The reaped child's stacked label is <child>//&<parent>, so each send peer
+  ## must name the child first; a reversed order never matches and the signal is
+  ## denied. The reapers (run_command for url_to_unixtime, kill_sclockadj for
+  ## sclockadj) both call process.kill() == SIGKILL, so set=kill is REQUIRED; a
+  ## denied kill leaves a hung fetch / running slew alive (kill_sclockadj even
+  ## swallows the denial). set=term kept for a future graceful path.
   signal send set=term peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
+  signal send set=kill peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
+  signal send set=kill peer=/usr/libexec/sdwdate/sclockadj//&/usr/libexec/sdwdate/sdwdate,
 
   deny /usr/sbin/ldconfig rx,
 

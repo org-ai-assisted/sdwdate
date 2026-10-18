@@ -6,7 +6,8 @@
 ## Minimal profile for the privileged clock setter sclockadj. Stacked under the
 ## sdwdate daemon profile (Cx -> &, additive and NNP-safe). sclockadj only
 ## reads/sets CLOCK_REALTIME from a single numeric argv -- it needs CAP_SYS_TIME,
-## libc, and its own binary, nothing else. Stacking strips the daemon's broader
+## libc, its own binary, and a SIGKILL-receive so the daemon can reap a running
+## slew; nothing else. Stacking strips the daemon's broader
 ## rules (network, tor, python, sdwdate file writes) from this high-value helper.
 /usr/libexec/sdwdate/sclockadj flags=(attach_disconnected) {
   #include <abstractions/base>
@@ -15,4 +16,9 @@
   capability sys_time,
 
   /usr/libexec/sdwdate/sclockadj mr,
+
+  ## kill_sclockadj reaps a running slew with process.kill() == SIGKILL; the
+  ## stacked receiver must permit the receive or the daemon's kill is denied and
+  ## silently swallowed, leaving the old slew running.
+  signal receive set=kill peer=/usr/libexec/sdwdate/sdwdate,
 }
