@@ -21,7 +21,10 @@
 
   signal receive set=cont,
   signal receive set=term,
-  signal send set=term peer=/usr/libexec/sdwdate/sdwdate//&/usr/bin/url_to_unixtime,
+  ## The reaped child's stacked label is <child>//&<parent>, so the send peer
+  ## must name url_to_unixtime first; the reversed order never matches and the
+  ## SIGTERM to the url_to_unixtime child is denied.
+  signal send set=term peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
 
   deny /usr/sbin/ldconfig rx,
 
@@ -93,6 +96,11 @@
   /{,usr/}bin/whoami rix,
   /{,usr/}bin/id rix,
   /{,usr/}bin/touch mrix,
+  ## onion-time-pre-script and tor_bootstrap_check run these during preparation;
+  ## the daemon needs exec of each or preparation cannot complete under enforce.
+  /{,usr/}bin/wc mrix,
+  /{,usr/}bin/grep mrix,
+  /{,usr/}bin/sanitize-string rix,
   @{PROC}/ r,
   @{PROC}/*/stat r,
   @{PROC}/sys/kernel/osrelease r,
