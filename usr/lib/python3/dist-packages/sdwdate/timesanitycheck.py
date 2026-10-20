@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# Copyright (C) 2017 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-# See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # sudo -u sdwdate
 # python3 /usr/lib/python3/dist-packages/sdwdate/timesanitycheck.py 1611640486

@@ -1,0 +1,15 @@
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
+
+#include <tunables/global>
+
+/usr/libexec/sdwdate/sclockadj flags=(attach_disconnected) {
+  #include <abstractions/base>
+  #include <local/usr.libexec.sdwdate.sclockadj>
+
+  capability sys_time,
+
+  /usr/libexec/sdwdate/sclockadj mr,
+
+  signal receive set=kill peer=/usr/libexec/sdwdate/sdwdate,
+}

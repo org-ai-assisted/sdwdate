@@ -1,27 +1,34 @@
-# Last Modified: Thu Sep 23 15:22:11 2021
 #include <tunables/global>
 
-## Copyright (C) 2012 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
-
-/usr/bin/sdwdate flags=(attach_disconnected) {
+## TODO-HUMAN-DEVELOPER-ONLY: Verify that the way AppArmor profile stacking is
+## done here is correct. It looks right, but this is a very complicated and
+## under-documented topic.
+/usr/libexec/sdwdate/sdwdate flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/bash>
   #include <abstractions/python>
   #include <abstractions/url_to_unixtime>
-  #include <local/usr.bin.sdwdate>
+  #include <local/usr.libexec.sdwdate.sdwdate>
 
   capability sys_time,
 
   signal receive set=cont,
   signal receive set=term,
-  signal send set=term peer=/usr/bin/sdwdate//null-/usr/bin/url_to_unixtime,
+  signal send set=term peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
+  signal send set=kill peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
+  signal send set=kill peer=/usr/libexec/sdwdate/sclockadj//&/usr/libexec/sdwdate/sdwdate,
 
   deny /usr/sbin/ldconfig rx,
 
-  deny /etc/nsswitch.conf r,
-  deny /etc/passwd r,
+  ## leaprun (privleap client, below) resolves its own euid via getpwuid() to find
+  ## its per-uid comm socket /run/privleapd/comm/<uid>; a passwd/nsswitch deny makes
+  ## that lookup fail, so leaprun aborts "Could not connect to privleapd" and sdwdate
+  ## never syncs time. passwd/nsswitch are world-readable; reading them leaks nothing.
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
   /etc/sdwdate.d/ r,
   /etc/sdwdate.d/** r,
   /etc/tor/ r,
@@ -38,9 +45,14 @@
   /usr/libexec/helper-scripts/tor_bootstrap_check.py mrix,
   /usr/libexec/helper-scripts/tor_consensus_valid-after.py mrix,
   /usr/libexec/helper-scripts/tor_consensus_valid-until.py mrix,
-  /usr/libexec/sdwdate/sclockadj rix,
+  /usr/libexec/sdwdate/ r,
+  /usr/libexec/sdwdate/sdwdate r,
+  /run/privleapd/pid r,
+  /run/privleapd/comm r,
+  /usr/libexec/sdwdate/sclockadj rmCx -> &/usr/libexec/sdwdate/sclockadj,
+  /usr/bin/url_to_unixtime rmCx -> &/usr/bin/url_to_unixtime,
   /usr/sbin/anondate-get rUx,
-  /usr/share/timesanitycheck/minimum_unixtime r,
+  /usr/share/dist-system-metadata/timesanitycheck/minimum_unixtime r,
   /usr/share/tor/tor-service-defaults-torrc r,
   /usr/share/tor/tor-service-defaults-torrc.anondist r,
   /usr/share/translations/sdwdate.yaml r,
@@ -54,6 +66,7 @@
   /{,usr/}bin/cat mrix,
   /{,usr/}bin/dash mrix,
   /{,usr/}bin/date mrix,
+  /{,usr/}bin/leaprun rix,
   /{,usr/}bin/minimum-unixtime-show rix,
   /{,usr/}bin/mktemp mrix,
   /{,usr/}bin/ps rix,
@@ -70,6 +83,9 @@
   /{,usr/}bin/whoami rix,
   /{,usr/}bin/id rix,
   /{,usr/}bin/touch mrix,
+  /{,usr/}bin/wc mrix,
+  /{,usr/}bin/grep mrix,
+  /{,usr/}bin/sanitize-string rix,
   @{PROC}/ r,
   @{PROC}/*/stat r,
   @{PROC}/sys/kernel/osrelease r,

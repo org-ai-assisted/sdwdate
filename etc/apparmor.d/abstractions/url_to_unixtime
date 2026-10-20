@@ -1,5 +1,5 @@
-## Copyright (C) 2017 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
   #include <abstractions/base>
   #include <abstractions/python>
@@ -7,9 +7,7 @@
   #include <abstractions/openssl>
 
   /usr/bin/ r,
-  /usr/bin/url_to_unixtime rix,
-  ## Once no new privs issue is resolved, can downgrade to this:
-  ## /usr/bin/url_to_unixtime r,
+  /usr/bin/url_to_unixtime r,
 
   ## https://forums.whonix.org/t/sdwdate-and-sdwdate-gui-development-thread/1137/372
   deny @{HOME}/** rwm,
