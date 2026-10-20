@@ -1,18 +1,8 @@
 version = 1
 
-# Narrow generic annotation: only uncommentable / generated / data paths that
-# cannot carry an in-file SPDX header. Comment-capable files carry per-file
-# SPDX headers instead. precedence = "closest" means any in-file header wins;
-# this block only fills the gap for the globbed paths.
-#
-# Verbatim COPYING + LICENSES/<id>.txt duplicate the license text because
-# GitHub licensee does not detect DEP-5 (licensee#333, wontfix) nor a
-# LICENSES-only tree on github.com yet (licensee#926, merged-not-deployed).
-
 [[annotations]]
-# COPYING and LICENSES/ are non-Covered Files (REUSE Spec 3.3) -- reuse ignores them, so
-# they are intentionally NOT listed here. Listing them would wrongly imprint the ESL
-# copyright on the FSF's verbatim AGPL text. Do not re-add.
+# Don't add COPYING and LICENSES/ here, those are license text and are not
+# under the same license as the project itself.
 path = [
   "debian/**",
   "auto-generated-man-pages/**",

@@ -6,9 +6,6 @@
 /usr/bin/url_to_unixtime flags=(attach_disconnected) {
   #include <abstractions/url_to_unixtime>
 
-  ## run_command's reaper kills this child with process.kill() == SIGKILL on
-  ## timeout; a stacked receiver must permit the receive or the signal is denied
-  ## (the hung fetch then survives). set=term kept for a future graceful path.
   signal receive set=term peer=/usr/libexec/sdwdate/sdwdate,
   signal receive set=kill peer=/usr/libexec/sdwdate/sdwdate,
 

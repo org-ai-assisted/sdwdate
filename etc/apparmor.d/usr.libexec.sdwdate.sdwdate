@@ -1,15 +1,11 @@
-# Last Modified: Thu Sep 23 15:22:11 2021
 #include <tunables/global>
 
 ## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
 ## SPDX-License-Identifier: AGPL-3.0-or-later
 
-
-## Confines the actual daemon entrypoint. sdwdate.service runs
-## /usr/libexec/sdwdate/sdwdate directly (the /usr/bin/sdwdate wrapper is only an
-## interactive leaprun shim). The service sets NoNewPrivileges=true, so helper
-## transitions use additive profile STACKING (Cx -> &profile), never a discrete
-## Px swap (which NNP denies).
+## TODO-HUMAN-DEVELOPER-ONLY: Verify that the way AppArmor profile stacking is
+## done here is correct. It looks right, but this is a very complicated and
+## under-documented topic.
 /usr/libexec/sdwdate/sdwdate flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/bash>
@@ -21,12 +17,6 @@
 
   signal receive set=cont,
   signal receive set=term,
-  ## The reaped child's stacked label is <child>//&<parent>, so each send peer
-  ## must name the child first; a reversed order never matches and the signal is
-  ## denied. The reapers (run_command for url_to_unixtime, kill_sclockadj for
-  ## sclockadj) both call process.kill() == SIGKILL, so set=kill is REQUIRED; a
-  ## denied kill leaves a hung fetch / running slew alive (kill_sclockadj even
-  ## swallows the denial). set=term kept for a future graceful path.
   signal send set=term peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
   signal send set=kill peer=/usr/bin/url_to_unixtime//&/usr/libexec/sdwdate/sdwdate,
   signal send set=kill peer=/usr/libexec/sdwdate/sclockadj//&/usr/libexec/sdwdate/sdwdate,
@@ -53,22 +43,9 @@
   /usr/libexec/helper-scripts/tor_consensus_valid-until.py mrix,
   /usr/libexec/sdwdate/ r,
   /usr/libexec/sdwdate/sdwdate r,
-  ## The daemon drives privileged time operations (anondate-set, clock jump,
-  ## hwclock sync) through privleap. Required now that the daemon is actually
-  ## confined: without these, leaprun exec is denied and sdwdate's tor/anondate
-  ## preparation fails (verified end-to-end on a Kicksecure VM). Matches the
-  ## systemcheck profile's privleap-client pattern.
-  /{,usr/}bin/leaprun rix,
   /run/privleapd/pid r,
   /run/privleapd/comm r,
-  ## sclockadj is the privileged CAP_SYS_TIME clock setter. Stack it into its own
-  ## minimal profile (additive, NNP-safe) so a compromised daemon path cannot use
-  ## the daemon's broader rules through it.
   /usr/libexec/sdwdate/sclockadj rmCx -> &/usr/libexec/sdwdate/sclockadj,
-  ## url_to_unixtime parses untrusted network responses -- the highest-risk path.
-  ## Stack it into its own profile (additive, NNP-safe) so the intersection strips
-  ## the daemon's broader powers (sys_time, sclockadj exec, sdwdate file writes)
-  ## from it; it keeps only what its own profile grants (network, python, ssl).
   /usr/bin/url_to_unixtime rmCx -> &/usr/bin/url_to_unixtime,
   /usr/sbin/anondate-get rUx,
   /usr/share/timesanitycheck/minimum_unixtime r,
@@ -85,6 +62,7 @@
   /{,usr/}bin/cat mrix,
   /{,usr/}bin/dash mrix,
   /{,usr/}bin/date mrix,
+  /{,usr/}bin/leaprun rix,
   /{,usr/}bin/minimum-unixtime-show rix,
   /{,usr/}bin/mktemp mrix,
   /{,usr/}bin/ps rix,
@@ -101,8 +79,6 @@
   /{,usr/}bin/whoami rix,
   /{,usr/}bin/id rix,
   /{,usr/}bin/touch mrix,
-  ## onion-time-pre-script and tor_bootstrap_check run these during preparation;
-  ## the daemon needs exec of each or preparation cannot complete under enforce.
   /{,usr/}bin/wc mrix,
   /{,usr/}bin/grep mrix,
   /{,usr/}bin/sanitize-string rix,

@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
-# SPDX-License-Identifier: AGPL-3.0-or-later
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # python3 /usr/lib/python3/dist-packages/sdwdate/config.py 0 test
 # python3 /usr/lib/python3/dist-packages/sdwdate/config.py 1 test

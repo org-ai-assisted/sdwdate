@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
-# SPDX-License-Identifier: AGPL-3.0-or-later
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # sudo -u sdwdate
 # python3 /usr/lib/python3/dist-packages/sdwdate/timesanitycheck.py 1611640486

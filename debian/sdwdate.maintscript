@@ -13,8 +13,6 @@ rm_conffile /etc/apparmor.d/abstractions/sdwdate
 
 rm_conffile /etc/apparmor.d/usr.lib.sdwdate.url_to_unixtime
 
-## Daemon profile re-pointed from the unused /usr/bin/sdwdate wrapper to the real
-## systemd entrypoint /usr/libexec/sdwdate/sdwdate (file renamed to match).
 rm_conffile /etc/apparmor.d/usr.bin.sdwdate
 
 rm_conffile /etc/privleap/conf.d/sdwdate.conf
