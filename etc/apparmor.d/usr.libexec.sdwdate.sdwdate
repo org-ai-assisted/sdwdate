@@ -23,8 +23,12 @@
 
   deny /usr/sbin/ldconfig rx,
 
-  deny /etc/nsswitch.conf r,
-  deny /etc/passwd r,
+  ## leaprun (privleap client, below) resolves its own euid via getpwuid() to find
+  ## its per-uid comm socket /run/privleapd/comm/<uid>; a passwd/nsswitch deny makes
+  ## that lookup fail, so leaprun aborts "Could not connect to privleapd" and sdwdate
+  ## never syncs time. passwd/nsswitch are world-readable; reading them leaks nothing.
+  /etc/nsswitch.conf r,
+  /etc/passwd r,
   /etc/sdwdate.d/ r,
   /etc/sdwdate.d/** r,
   /etc/tor/ r,
