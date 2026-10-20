@@ -1,8 +1,8 @@
 #!/usr/bin/python3 -Bsu
 
-# SPDX-FileCopyrightText: troubadour <trobador@riseup.net>
-# SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
-# SPDX-License-Identifier: AGPL-3.0-or-later
+## SPDX-FileCopyrightText: troubadour <trobador@riseup.net>
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Example:
 # sudo -u sdwdate python3 /usr/lib/python3/dist-packages/sdwdate/remote_times.py "http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/a http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/b http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/c" "127.0.0.1" "9050"

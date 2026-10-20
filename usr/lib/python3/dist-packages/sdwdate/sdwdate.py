@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
-# SPDX-License-Identifier: AGPL-3.0-or-later
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 import sys
 sys.dont_write_bytecode = True

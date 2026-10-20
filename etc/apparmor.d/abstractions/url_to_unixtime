@@ -7,10 +7,6 @@
   #include <abstractions/openssl>
 
   /usr/bin/ r,
-  ## Plain read only. The exec transition is the INCLUDING profile's job: the
-  ## sdwdate daemon stacks via `Cx -> &/usr/bin/url_to_unixtime` (additive, so it
-  ## works under the service's NoNewPrivileges=true, unlike a discrete Px swap),
-  ## and the standalone /usr/bin/url_to_unixtime profile does not re-exec itself.
   /usr/bin/url_to_unixtime r,
 
   ## https://forums.whonix.org/t/sdwdate-and-sdwdate-gui-development-thread/1137/372
