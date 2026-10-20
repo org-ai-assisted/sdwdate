@@ -48,7 +48,7 @@
   /usr/libexec/sdwdate/sclockadj rmCx -> &/usr/libexec/sdwdate/sclockadj,
   /usr/bin/url_to_unixtime rmCx -> &/usr/bin/url_to_unixtime,
   /usr/sbin/anondate-get rUx,
-  /usr/share/timesanitycheck/minimum_unixtime r,
+  /usr/share/dist-system-metadata/timesanitycheck/minimum_unixtime r,
   /usr/share/tor/tor-service-defaults-torrc r,
   /usr/share/tor/tor-service-defaults-torrc.anondist r,
   /usr/share/translations/sdwdate.yaml r,
