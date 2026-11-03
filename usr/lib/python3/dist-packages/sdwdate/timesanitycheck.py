@@ -108,8 +108,8 @@ def static_time_sanity_check(unixtime_to_validate):
             stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
-        minimum_unixtime = stdout.decode()
-        minimum_unixtime = int(minimum_unixtime)
+        minimum_unixtime_str = stdout.decode()
+        minimum_unixtime = int(minimum_unixtime_str)
         # minimum_time_human_readable = stderr.decode()
 
         if unixtime_to_validate < minimum_unixtime:
