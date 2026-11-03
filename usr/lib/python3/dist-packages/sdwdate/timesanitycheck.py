@@ -20,6 +20,19 @@ os.environ["LC_TIME"] = "C"
 os.environ["TZ"] = "UTC"
 time.tzset()
 
+## Tor consensus generation gaps (directory authorities fail to form a consensus
+## for several consecutive hours) leave the client with an expired but still
+## correct consensus; Tor keeps building circuits on it, so the onion time
+## sources still return the correct time. Without grace a correct remote time
+## past consensus/valid-until is rejected as "fast", so the clock cannot be set
+## for the duration of the gap -- fatal at boot, where it must be set ASAP.
+## Grace the upper (valid-until) bound only, by more than the longest real
+## consensus-generation outage observed 2021-2026 (~6h, via CollecTor); the lower
+## bound stays strict and replay protection, the static floor, and the multi-pool
+## median remain the other independent guards.
+CONSENSUS_FAST_GRACE_SECONDS = 8 * 60 * 60
+
+
 def time_consensus_sanity_check(unixtime):
     error = ""
     status = "ok"
@@ -61,7 +74,8 @@ def time_consensus_sanity_check(unixtime):
         else:
             status = "slow"
 
-        if int(unixtime) > int(consensus_valid_until_unixtime):
+        if int(unixtime) > int(consensus_valid_until_unixtime) \
+                + CONSENSUS_FAST_GRACE_SECONDS:
             status = "fast"
         else:
             pass
