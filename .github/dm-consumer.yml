@@ -1,5 +1,5 @@
-## Copyright (C) 2026 - 2026 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## AI-Assisted
 
@@ -27,8 +27,10 @@ dist-ai-tests:
   ## sdwdate-tests imports sdwdate.sdwdate for real. That import pulls
   ## sdnotify, dateutil (via sdwdate.timesanitycheck) and stem, plus
   ## guimessages and sanitize_string from helper-scripts. requests is needed
-  ## by the fuzz suite's url_to_unixtime subject.
-  apt-packages: "python3 python3-pytest python3-hypothesis python3-sdnotify python3-dateutil python3-requests python3-stem"
+  ## by the fuzz suite's url_to_unixtime subject. gcc + libc6-dev + cbmc drive
+  ## test_sclockadj_verification (compile the sclockadj pure-arithmetic unit/
+  ## fuzz harness, and CBMC-prove it).
+  apt-packages: "python3 python3-pytest python3-hypothesis python3-sdnotify python3-dateutil python3-requests python3-stem gcc libc6-dev cbmc"
   helper-scripts: true
   ## sdwdate-tests-fuzz-atheris SKIPs (exit 77) when atheris is absent -- atheris
   ## is not an apt package; coverage-guided fuzzing is the ClusterFuzzLite lane

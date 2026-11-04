@@ -1,10 +1,13 @@
-## Copyright (C) 2017 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 #include <tunables/global>
 
 /usr/bin/url_to_unixtime flags=(attach_disconnected) {
   #include <abstractions/url_to_unixtime>
+
+  signal receive set=term peer=/usr/libexec/sdwdate/sdwdate,
+  signal receive set=kill peer=/usr/libexec/sdwdate/sdwdate,
 
   # Site-specific additions and overrides. See local/README for details.
   #include <local/usr.bin.url_to_unixtime>

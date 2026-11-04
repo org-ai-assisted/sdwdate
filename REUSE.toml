@@ -1,0 +1,14 @@
+version = 1
+
+[[annotations]]
+# Don't add COPYING and LICENSES/ here, those are license text and are not
+# under the same license as the project itself.
+path = [
+  "debian/**",
+  "auto-generated-man-pages/**",
+  "changelog.upstream",
+  "config-test.txt",
+]
+precedence = "closest"
+SPDX-FileCopyrightText = "ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>"
+SPDX-License-Identifier = "AGPL-3.0-or-later"
