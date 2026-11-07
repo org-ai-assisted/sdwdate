@@ -25,7 +25,7 @@
 ## is missing or empty.
 ##
 ## Reusable docs:
-## https://github.com/org-ai-assisted/developer-meta-files/blob/master/.github/workflows/reusable-codeql.yml
+## https://github.com/org-ai-assisted/developer-meta-files/blob/ai/.github/workflows/reusable-codeql.yml
 
 name: CodeQL c-cpp
 
@@ -45,7 +45,7 @@ concurrency:
 
 jobs:
   c-cpp:
-    uses: org-ai-assisted/developer-meta-files/.github/workflows/reusable-codeql.yml@master
+    uses: org-ai-assisted/developer-meta-files/.github/workflows/reusable-codeql.yml@ai
     with:
       language: c-cpp
       build-mode: manual
