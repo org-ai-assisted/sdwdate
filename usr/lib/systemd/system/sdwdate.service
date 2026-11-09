@@ -70,6 +70,13 @@ RestrictAddressFamilies=AF_UNIX AF_INET
 RestrictNamespaces=true
 SystemCallArchitectures=native
 
+## W^X hardening: deny executable memory. MemoryDenyWriteExecute is a seccomp
+## filter returning EPERM on mmap PROT_WRITE|PROT_EXEC and on any mprotect adding
+## PROT_EXEC. The memfd read-then-exec bypass is already closed here: memfd_create
+## is absent from the SystemCallFilter allow-list below, and PrivateTmp=true gives
+## a private /dev/shm. No JIT or ctypes callbacks in sdwdate or its dependencies.
+MemoryDenyWriteExecute=true
+
 ## Split into multiple lines to fix lintian warning very-long-line-length-in-source-file.
 SystemCallFilter=\
 wait4 select futex read stat close openat fstat lseek mmap rt_sigaction \
