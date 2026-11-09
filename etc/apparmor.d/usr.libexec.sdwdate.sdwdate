@@ -34,8 +34,12 @@
   /etc/tor/ r,
   /etc/tor/** r,
   /run/tor/control.authcookie r,
-  /tmp/* mrw,
-  /tmp/** mrw,
+  ## W^X Layer 2 (file-backed exec): rw only, never m. sdwdate execs trusted
+  ## helpers from /usr (the mrix rules below), never from /tmp, so dropping m
+  ## closes the file-backed executable-mapping vector that MemoryDenyWriteExecute
+  ## (anonymous mappings only) does not cover.
+  /tmp/* rw,
+  /tmp/** rw,
   /usr/lib/python3/dist-packages/sdwdate/timesanitycheck.py rix,
   /usr/libexec/helper-scripts/ r,
   /usr/libexec/helper-scripts/** r,
