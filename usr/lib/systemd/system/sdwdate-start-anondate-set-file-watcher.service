@@ -36,14 +36,18 @@ Restart=always
 AmbientCapabilities=CAP_SYS_TIME
 CapabilityBoundingSet=CAP_SYS_TIME
 
-## W^X hardening (anonymous executable memory): MemoryDenyWriteExecute denies
-## writable+executable mappings and any mmap/mprotect gaining PROT_EXEC;
-## SystemCallFilter=~memfd_create blocks the anonymous memfd exec-bypass (the
-## call is SIGSYS-killed). The seccomp filter installs via the root executor's
-## CAP_SYS_ADMIN before the drop to User=sdwdate, so NoNewPrivileges stays off
-## and AmbientCapabilities=CAP_SYS_TIME is retained. Pure bash + inotifywait, no JIT.
+## W^X hardening (Layer 1 anonymous + Layer 2 file-backed). MemoryDenyWriteExecute
+## denies anon W+X and mprotect/shmat gaining PROT_EXEC; SystemCallArchitectures=
+## native closes the secondary-ABI (i386) bypass; LockPersonality blocks the
+## READ_IMPLIES_EXEC bypass; SystemCallFilter=~memfd_create kills the memfd
+## bypass; NoExecPaths marks the writable dirs non-executable (file-backed exec
+## MDWE does not cover). AmbientCapabilities=CAP_SYS_TIME is retained for the clock
+## set. Pure bash + inotifywait, no JIT.
 MemoryDenyWriteExecute=true
+SystemCallArchitectures=native
+LockPersonality=true
 SystemCallFilter=~memfd_create
+NoExecPaths=/run /tmp /var/tmp /dev/shm
 
 [Install]
 WantedBy=multi-user.target
