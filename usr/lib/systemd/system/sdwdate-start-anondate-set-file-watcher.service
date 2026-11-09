@@ -36,5 +36,14 @@ Restart=always
 AmbientCapabilities=CAP_SYS_TIME
 CapabilityBoundingSet=CAP_SYS_TIME
 
+## W^X hardening (anonymous executable memory): MemoryDenyWriteExecute denies
+## writable+executable mappings and any mmap/mprotect gaining PROT_EXEC;
+## SystemCallFilter=~memfd_create blocks the anonymous memfd exec-bypass (the
+## call is SIGSYS-killed). The seccomp filter installs via the root executor's
+## CAP_SYS_ADMIN before the drop to User=sdwdate, so NoNewPrivileges stays off
+## and AmbientCapabilities=CAP_SYS_TIME is retained. Pure bash + inotifywait, no JIT.
+MemoryDenyWriteExecute=true
+SystemCallFilter=~memfd_create
+
 [Install]
 WantedBy=multi-user.target
