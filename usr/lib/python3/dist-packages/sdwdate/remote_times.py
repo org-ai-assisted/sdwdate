@@ -1,8 +1,8 @@
 #!/usr/bin/python3 -Bsu
 
-# Copyright (C) 2015 troubadour <trobador@riseup.net>
-# Copyright (C) 2015 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-# See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: troubadour <trobador@riseup.net>
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # Example:
 # sudo -u sdwdate python3 /usr/lib/python3/dist-packages/sdwdate/remote_times.py "http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/a http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/b http://www.dds6qkxpwdeubwucdiaord2xgbbeyds25rbsgr73tbfpqpt4a6vjwsyd.onion/c" "127.0.0.1" "9050"
@@ -15,7 +15,7 @@ import signal
 import shlex
 import time
 import subprocess
-from subprocess import Popen, PIPE
+from subprocess import PIPE
 import concurrent.futures
 
 from .config import get_comment
@@ -170,20 +170,13 @@ def check_remote(i, pools, remote, process, status, end_unixtime, took_time, std
     # Test:
     # status = "done"
 
-    if status == "timeout":
-        cast_success = False
-    elif status == "error":
-        cast_success = False
-    else:
+    if status != "timeout" and status != "error":
         try:
             # cast str unixtime_maybe to int remote_unixtime
             remote_unixtime = int(unixtime_maybe)
-            cast_success = True
         except BaseException:
-            cast_success = False
             status = "error"
             error_message = str(sys.exc_info()[0])
-            status = "error"
             print("* ERROR: Could not cast to int. error_message: " + error_message)
 
     # Test:

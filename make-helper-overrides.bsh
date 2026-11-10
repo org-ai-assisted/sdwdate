@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Copyright (C) 2020 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-## See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 genmkfile_lintian_post_opts+=" --suppress-tags no-manual-page "
