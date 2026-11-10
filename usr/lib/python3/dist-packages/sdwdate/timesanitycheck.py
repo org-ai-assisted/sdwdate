@@ -61,6 +61,7 @@ def time_consensus_sanity_check(unixtime):
     try:
         controller.close()
     except BaseException:
+        # best-effort close; connection may already be gone
         pass
 
     try:
@@ -83,6 +84,7 @@ def time_consensus_sanity_check(unixtime):
         try:
             controller.close()
         except BaseException:
+            # best-effort close; connection may already be gone
             pass
         error = "Unexpected error: " + str(sys.exc_info()[0])
         status = "error"
