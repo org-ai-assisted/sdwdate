@@ -1032,7 +1032,8 @@ def main():
     my_pid = os.getpid()
     pid_message = "sdwdate (Secure Distributed Web Date) started. PID: %s" % my_pid
     LOGGER.info(pid_message)
-    LOGGER.info(pid_message)
+    msg = "https://www.kicksecure.com/wiki/sdwdate"
+    LOGGER.info(msg)
 
     if os.geteuid() == 0:
         do_not_run_as_root_message = "Exit error... \
