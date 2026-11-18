@@ -1,96 +1,147 @@
 /*
-Copyright (C) 2016 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-See the file COPYING for copying conditions.
-*/
+ * SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+ * SPDX-License-Identifier: AGPL-3.0-or-later
+ */
+
 #define _GNU_SOURCE
+#define POSITIVE_STEP_NS 5000000
+#define NEGATIVE_STEP_NS -5000000
+#define NS_IN_SEC 1000000000
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
+#include <stdint.h>
+#include <string.h>
+#include <err.h>
+#include <assert.h>
+#include <errno.h>
+#include <stdbool.h>
 
-/* receive time adjustment, negative or positive, in nanoseconds */
-/* long long 64bit is at least -9,223,372,036,854,775,807 to +9,223,372,036,854,775,807 */
-/* exits program upon failure */
-void change_time_by_nanoseconds(long long add_ns)
-{
-    struct timespec tps = { 0 }; /* tv_sec; tv_nsec */
-    long long ns_since_epoch = 0;
-    long long new_ns_since_epoch = 0;
-    long new_s = 0;
-    long new_ns = 0;
-    if (clock_gettime(CLOCK_REALTIME, &tps) == -1) /* get current time in seconds since epoch + nanoseconds offset */
-    {
-        perror("Failed to get current time!");
-        exit(EXIT_FAILURE);
-    }
-    /* combine seconds and nanoseconds offset in order to add nanoseconds*/
-    ns_since_epoch =
-        (long long)(tps.tv_sec) * 1000000000 + /* convert seconds to nanoseconds */
-        (long long)(tps.tv_nsec);              /* add offset */
-    new_ns_since_epoch = ns_since_epoch + add_ns;
-    /* separate new nanoseconds since epoch into seconds and nanoseconds offset */
-    new_s = new_ns_since_epoch / 1000000000;  /* truncates into seconds */
-    new_ns = new_ns_since_epoch % 1000000000; /* nanoseconds remainder */
-    /* set old struct with new values */
-    tps.tv_sec = new_s;
-    tps.tv_nsec = new_ns;
-    /* set time with new values */
-    if (clock_settime(CLOCK_REALTIME, &tps) == -1)
-    {
-        perror("Failed to change clock!");
-        exit(EXIT_FAILURE);
-    }
+void print_help_and_exit(void) {
+  fprintf(stderr,
+    "sclockadj: gradually shift system time a specified number of nanoseconds forward or backward\n");
+  fprintf(stderr,
+    "Usage: sclockadj <shift_ns>\n");
+  exit(0);
 }
 
-/* intended to be used only by sdwdate with sane inputs */
-int main(int argc, char *argv[])
-{
-    long long ns_time_change = 0;
-    static int const full_jump = 5000000;
-    long long number_of_full_jumps = 0;
-    long long last_jump_nanoseconds = 0;
-    unsigned i = 0;
+bool step_timestamp(struct timespec *ts_ptr, int64_t *time_shift_ns_ptr) {
+  int64_t time_shift_ns = 0;
+  struct timespec ts = { 0 };
+  int64_t shift_val = 0;
+  int64_t temp_ns = 0;
+  int64_t temp_sec = 0;
 
-    if (argc < 2) {
-       perror("Too few args!");
-       exit(EXIT_FAILURE);
-    }
-    if (argc > 2) {
-       perror("Too many args!");
-       exit(EXIT_FAILURE);
-    }
-    ns_time_change = atoll(argv[1]); /* convert argv string into long long */
-    if (ns_time_change == 0)
-    {
-        perror("Failed to get nanosecond argument!");
-        exit(EXIT_FAILURE); /* exit if atoll fails */
-    }
+  if (ts_ptr == NULL || time_shift_ns_ptr == NULL) {
+    return false;
+  }
+  time_shift_ns = *time_shift_ns_ptr;
+  ts = *ts_ptr;
 
-    /* since nanosecond jump is fixed, we can count the number of complete jumps. */
-    /* llabs for negative numbers */
-    number_of_full_jumps = llabs(ns_time_change) / full_jump;  /* times we'll move clock by 5,000,000 ns at a time */
-    last_jump_nanoseconds = llabs(ns_time_change) % full_jump; /* then add remaining < 5,000,000 ns */
+  if (time_shift_ns > 0) {
+    if (time_shift_ns > POSITIVE_STEP_NS) {
+      shift_val = POSITIVE_STEP_NS;
+      time_shift_ns -= POSITIVE_STEP_NS;
+    } else {
+      shift_val = time_shift_ns;
+      time_shift_ns = 0;
+    }
+  } else {
+    if (time_shift_ns < NEGATIVE_STEP_NS) {
+      shift_val = NEGATIVE_STEP_NS;
+      time_shift_ns -= NEGATIVE_STEP_NS;
+    } else {
+      shift_val = time_shift_ns;
+      time_shift_ns = 0;
+    }
+  }
 
-    if (ns_time_change > 0) /* positive nanosecond change */
-    {
-        for (i = 0; i < number_of_full_jumps; ++i)
-        {
-            sleep(1);  /* a 1 second wait imitates ntpdate */
-            change_time_by_nanoseconds(full_jump); /* 5,000,000 ns imitates ntpdate */
-        }
-        sleep(1);
-        change_time_by_nanoseconds(last_jump_nanoseconds);
+  temp_ns = (int64_t)ts.tv_nsec;
+  temp_sec = (int64_t)ts.tv_sec;
+  assert(temp_ns >= 0);
+  assert(temp_ns < NS_IN_SEC);
+
+  temp_ns += shift_val; // note this may subtract
+  if (temp_ns >= NS_IN_SEC) {
+    if (temp_sec == INT64_MAX) {
+      return false;
     }
-    else  /* negative nanosecond change */
-    {
-        for (i = 0; i < number_of_full_jumps; ++i)
-        {
-            sleep(1);
-            change_time_by_nanoseconds(-full_jump);
-        }
-        sleep(1);
-        change_time_by_nanoseconds(-last_jump_nanoseconds); /* negative of absolute value imitates Euclidean modulo */
+    temp_ns -= NS_IN_SEC;
+    temp_sec++;
+  } else if (temp_ns < 0) {
+    if (temp_sec == INT64_MIN) {
+      return false;
     }
-    return EXIT_SUCCESS;
+    temp_ns += NS_IN_SEC;
+    temp_sec--;
+  }
+
+  ts.tv_nsec = (uint32_t)(temp_ns);
+  ts.tv_sec = (time_t)(temp_sec);
+  *ts_ptr = ts;
+  *time_shift_ns_ptr = time_shift_ns;
+  return true;
 }
+
+void slew_system_time(int64_t time_shift_ns) {
+  struct timespec ts = { 0 };
+
+  while (time_shift_ns != 0) {
+    if (clock_gettime(CLOCK_REALTIME, &ts) == -1) {
+      err(1, "ERROR: Could not get current time");
+    }
+    if (!step_timestamp(&ts, &time_shift_ns)) {
+      errx(1, "ERROR: Could not step timestamp!\n");
+    }
+    if (clock_settime(CLOCK_REALTIME, &ts) == -1) {
+      err(1, "ERROR: Could not set current time");
+    }
+    sleep(1);
+  }
+}
+
+int64_t parse_int(char *in_str) {
+  long long raw_parse_rslt = 0;
+  char *check_ptr = NULL;
+
+  errno = 0;
+  raw_parse_rslt = strtoll(in_str, &check_ptr, 10);
+  if (errno != 0) {
+    return 0;
+  }
+  if (*check_ptr != '\0') {
+    errno = EOPNOTSUPP;
+    return 0;
+  }
+  // Probably impossible but check anyway
+  if (raw_parse_rslt > INT64_MAX || raw_parse_rslt < INT64_MIN) {
+    errno = ERANGE;
+    return 0;
+  }
+  return (int64_t)(raw_parse_rslt);
+}
+
+#ifndef SCLOCKADJ_TEST
+int main(int argc, char **argv) {
+  int64_t time_shift_int = 0;
+
+  if (argc != 2) {
+    errx(1, "ERROR: Incorrect number of arguments! See --help.\n");
+  }
+  if (argv[1][0] == '\0') {
+    errx(1, "ERROR: Empty argument! See --help.\n");
+  }
+  if (strcmp(argv[1], "--help") == 0) {
+    print_help_and_exit();
+  }
+  time_shift_int = parse_int(argv[1]);
+  if (errno != 0) {
+    errx(1, "ERROR: Time shift value is not an integer or is out of range!\n");
+  }
+
+  slew_system_time(time_shift_int);
+  exit(0);
+}
+#endif

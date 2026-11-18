@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# Copyright (C) 2017 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-# See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # python3 /usr/lib/python3/dist-packages/sdwdate/config.py 0 test
 # python3 /usr/lib/python3/dist-packages/sdwdate/config.py 1 test
@@ -102,6 +102,7 @@ def get_comment(pools, remote):
             url_comment = pool_item.comment[url_index]
             break
         except BaseException:
+            # remote not in this pool; try the next pool
             pass
     return url_comment
 
@@ -112,6 +113,7 @@ def get_comment_pool_single(pool, remote):
         url_index = pool.url.index(remote)
         url_comment = pool.comment[url_index]
     except BaseException:
+        # remote not found in pool; keep the default "unknown-comment"
         pass
     return url_comment
 
