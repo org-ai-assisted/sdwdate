@@ -1,7 +1,7 @@
 #!/usr/bin/python3 -Bsu
 
-# Copyright (C) 2017 - 2025 ENCRYPTED SUPPORT LLC <adrelanos@whonix.org>
-# See the file COPYING for copying conditions.
+## SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+## SPDX-License-Identifier: AGPL-3.0-or-later
 
 # sudo -u sdwdate
 # python3 /usr/lib/python3/dist-packages/sdwdate/timesanitycheck.py 1611640486
@@ -19,6 +19,12 @@ import subprocess
 os.environ["LC_TIME"] = "C"
 os.environ["TZ"] = "UTC"
 time.tzset()
+
+## Tolerate times past consensus/valid-until for some time, to cope with gaps
+## between new consensus publications. Longest known gap according to CollecTor
+## was about 6 hours as of 2026-11-22, so we tolerate a bit more than that.
+CONSENSUS_FAST_GRACE_SECONDS = 8 * 60 * 60
+
 
 def time_consensus_sanity_check(unixtime):
     error = ""
@@ -48,6 +54,7 @@ def time_consensus_sanity_check(unixtime):
     try:
         controller.close()
     except BaseException:
+        # Connection may already be gone.
         pass
 
     try:
@@ -61,7 +68,8 @@ def time_consensus_sanity_check(unixtime):
         else:
             status = "slow"
 
-        if int(unixtime) > int(consensus_valid_until_unixtime):
+        if int(unixtime) > int(consensus_valid_until_unixtime) \
+                + CONSENSUS_FAST_GRACE_SECONDS:
             status = "fast"
         else:
             pass
@@ -69,6 +77,7 @@ def time_consensus_sanity_check(unixtime):
         try:
             controller.close()
         except BaseException:
+            # Connection may already be gone.
             pass
         error = "Unexpected error: " + str(sys.exc_info()[0])
         status = "error"
@@ -94,8 +103,8 @@ def static_time_sanity_check(unixtime_to_validate):
             stderr=subprocess.PIPE)
         stdout, stderr = p.communicate()
 
-        minimum_unixtime = stdout.decode()
-        minimum_unixtime = int(minimum_unixtime)
+        minimum_unixtime_str = stdout.decode()
+        minimum_unixtime = int(minimum_unixtime_str)
         # minimum_time_human_readable = stderr.decode()
 
         if unixtime_to_validate < minimum_unixtime:

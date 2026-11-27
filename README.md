@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: ENCRYPTED SUPPORT LLC <adrelanos@kicksecure.com>
+SPDX-License-Identifier: AGPL-3.0-or-later
+-->
+
 # Secure Distributed Network Time Synchronization #
 
 Time keeping is crucial for security, privacy, and anonymity. Sdwdate is a Tor
@@ -5,7 +10,7 @@ friendly replacement for rdate and ntpdate that sets the system's clock by
 communicating via onion encrypted TCP with Tor onion webservers.
 
 At randomized intervals, sdwdate connects to a variety of webservers and
-extracts the time stamps from http headers (RFC 2616).
+extracts the time stamps from http headers (RFC 9110).
 Using sclockadj option, time is gradually adjusted preventing bigger clock
 jumps that could confuse logs, servers, Tor, i2p, etc.
 
